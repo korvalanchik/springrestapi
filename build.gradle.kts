@@ -27,8 +27,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
-    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+    implementation("io.jsonwebtoken:jjwt:0.12.5")
     // https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
     compileOnly("jakarta.servlet:jakarta.servlet-api:6.0.0")
     implementation("org.flywaydb:flyway-core")

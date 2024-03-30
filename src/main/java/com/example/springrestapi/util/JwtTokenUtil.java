@@ -17,7 +17,7 @@ public class JwtTokenUtil {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    private String secret = "zdtlD3JK56m6wTTgsNFhqzjqP";
+    private String secret = "F7cxiHbVsd8AFfjsb4OzhBWlFJPKNRAE0RpM9Md6w5IZp9gPDKMY74RznALRrRDYzPcja9uE2CkjMBx6qyNsSw";
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
