@@ -21,6 +21,6 @@ public class UserDTO {
     @Size(max = 255)
     private String password;
 
-    private List<Long> roles;
+    private List<Authority> roles;
 
 }

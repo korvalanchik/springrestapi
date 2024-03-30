@@ -1,6 +1,6 @@
 package com.example.springrestapi.domain;
 
-import com.example.spring_rest_api.model.Authority;
+import com.example.springrestapi.model.Authority;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -18,13 +18,14 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
 
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -55,4 +56,8 @@ public class Role {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    @Override
+    public String getAuthority() {
+        return name.toString();
+    }
 }
