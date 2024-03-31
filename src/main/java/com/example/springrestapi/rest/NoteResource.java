@@ -33,29 +33,29 @@ public class NoteResource {
         return ResponseEntity.ok(noteService.findAll());
     }
 
-    @GetMapping("/{userid}")
-    public ResponseEntity<NoteDTO> getNote(@PathVariable(name = "userid") final Long userid) {
-        return ResponseEntity.ok(noteService.get(userid));
+    @GetMapping("/{noteid}")
+    public ResponseEntity<NoteDTO> getNote(@PathVariable(name = "noteid") final Long noteId) {
+        return ResponseEntity.ok(noteService.get(noteId));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createNote(@RequestBody @Valid final NoteDTO noteDTO) {
-        final Long createdUserid = noteService.create(noteDTO);
-        return new ResponseEntity<>(createdUserid, HttpStatus.CREATED);
+        final Long createdUserId = noteService.create(noteDTO);
+        return new ResponseEntity<>(createdUserId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{userid}")
-    public ResponseEntity<Long> updateNote(@PathVariable(name = "userid") final Long userid,
+    @PutMapping("/{noteid}")
+    public ResponseEntity<Long> updateNote(@PathVariable(name = "noteid") final Long noteId,
             @RequestBody @Valid final NoteDTO noteDTO) {
-        noteService.update(userid, noteDTO);
-        return ResponseEntity.ok(userid);
+        noteService.update(noteId, noteDTO);
+        return ResponseEntity.ok(noteId);
     }
 
-    @DeleteMapping("/{userid}")
+    @DeleteMapping("/{noteid}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deleteNote(@PathVariable(name = "userid") final Long userid) {
-        noteService.delete(userid);
+    public ResponseEntity<Void> deleteNote(@PathVariable(name = "noteid") final Long noteId) {
+        noteService.delete(noteId);
         return ResponseEntity.noContent().build();
     }
 

@@ -8,6 +8,8 @@ import com.example.springrestapi.repos.UserRepository;
 import com.example.springrestapi.util.NotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -23,14 +25,14 @@ public class NoteService {
     }
 
     public List<NoteDTO> findAll() {
-        final List<Note> notes = noteRepository.findAll(Sort.by("userid"));
+        final List<Note> notes = noteRepository.findAll(Sort.by("userId"));
         return notes.stream()
                 .map(note -> mapToDTO(note, new NoteDTO()))
                 .toList();
     }
 
-    public NoteDTO get(final Long userid) {
-        return noteRepository.findById(userid)
+    public NoteDTO get(final Long noteId) {
+        return noteRepository.findById(noteId)
                 .map(note -> mapToDTO(note, new NoteDTO()))
                 .orElseThrow(NotFoundException::new);
     }
@@ -38,34 +40,35 @@ public class NoteService {
     public Long create(final NoteDTO noteDTO) {
         final Note note = new Note();
         mapToEntity(noteDTO, note);
-        return noteRepository.save(note).getUserid();
+        return noteRepository.save(note).getUsersId();
     }
 
-    public void update(final Long userid, final NoteDTO noteDTO) {
-        final Note note = noteRepository.findById(userid)
+    public void update(final Long noteId, final NoteDTO noteDTO) {
+        final Note note = noteRepository.findById(noteId)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(noteDTO, note);
         noteRepository.save(note);
     }
 
-    public void delete(final Long userid) {
-        noteRepository.deleteById(userid);
+    public void delete(final Long noteId) {
+        noteRepository.deleteById(noteId);
     }
 
     private NoteDTO mapToDTO(final Note note, final NoteDTO noteDTO) {
-        noteDTO.setUserid(note.getUserid());
+        noteDTO.setUserId(note.getUsersId());
         noteDTO.setTitle(note.getTitle());
         noteDTO.setContent(note.getContent());
-        noteDTO.setUser(note.getUser() == null ? null : note.getUser().getId());
+        noteDTO.setUser(note.getUser() == null ? null : note.getUsersId());
         return noteDTO;
     }
 
     private Note mapToEntity(final NoteDTO noteDTO, final Note note) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName(); // Retrieve the current username
+        com.example.springrestapi.domain.User user = userRepository.findByUsername(currentUsername);
         note.setTitle(noteDTO.getTitle());
         note.setContent(noteDTO.getContent());
-        final User user = noteDTO.getUser() == null ? null : userRepository.findById(noteDTO.getUser())
-                .orElseThrow(() -> new NotFoundException("user not found"));
-        note.setUser(user);
+        note.setUserId(user.getId());
         return note;
     }
 

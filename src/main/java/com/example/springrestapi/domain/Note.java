@@ -1,15 +1,7 @@
 package com.example.springrestapi.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,17 +28,17 @@ public class Note {
             strategy = GenerationType.SEQUENCE,
             generator = "primary_sequence"
     )
-    private Long userid;
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false, length = 100)
     private String title;
 
     @Column(nullable = false)
     private String content;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -56,4 +48,29 @@ public class Note {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    @PrePersist
+    public void prePersist() {
+        this.dateCreated = OffsetDateTime.now();
+        this.lastUpdated = OffsetDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.lastUpdated = OffsetDateTime.now();
+    }
+
+    public Long getUsersId() {
+        return this.user != null ? this.user.getId() : null;
+    }
+
+    public void setUserId(Long userId) {
+        if (userId != null) {
+            if (this.user == null) {
+                this.user = new User();
+            }
+            this.user.setId(userId);
+        } else {
+            this.user = null;
+        }
+    }
 }

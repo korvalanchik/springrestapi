@@ -1,11 +1,9 @@
 package com.example.springrestapi.service;
 
 import com.example.springrestapi.domain.Note;
-import com.example.springrestapi.domain.Role;
 import com.example.springrestapi.domain.User;
 import com.example.springrestapi.model.UserDTO;
 import com.example.springrestapi.repos.NoteRepository;
-import com.example.springrestapi.repos.RoleRepository;
 import com.example.springrestapi.repos.UserRepository;
 import com.example.springrestapi.util.NotFoundException;
 import com.example.springrestapi.util.ReferencedWarning;
@@ -13,8 +11,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -23,13 +19,10 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final NoteRepository noteRepository;
 
-    public UserService(final UserRepository userRepository, final RoleRepository roleRepository,
-            final NoteRepository noteRepository) {
+    public UserService(final UserRepository userRepository, final NoteRepository noteRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.noteRepository = noteRepository;
     }
 
@@ -73,12 +66,6 @@ public class UserService {
     private User mapToEntity(final UserDTO userDTO, final User user) {
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
-        final List<Role> roles = roleRepository.findAllById(
-                userDTO.getRoles() == null ? Collections.emptyList() : userDTO.getRoles());
-        if (roles.size() != (userDTO.getRoles() == null ? 0 : userDTO.getRoles().size())) {
-            throw new NotFoundException("one of roles not found");
-        }
-        user.setRoles(new HashSet<>(roles));
         return user;
     }
 
@@ -89,7 +76,7 @@ public class UserService {
         final Note userNote = noteRepository.findFirstByUser(user);
         if (userNote != null) {
             referencedWarning.setKey("user.note.user.referenced");
-            referencedWarning.addParam(userNote.getUserid());
+            referencedWarning.addParam(userNote.getUsersId());
             return referencedWarning;
         }
         return null;

@@ -1,6 +1,6 @@
 package com.example.springrestapi.service;
 
-import com.example.springrestapi.domain.User;
+import org.springframework.security.core.userdetails.User;
 import com.example.springrestapi.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +17,22 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles());
-        } else {
+        com.example.springrestapi.domain.User user = userRepository.findByUsername(username);
+        if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        return User.withUsername(user.getUsername())
+                .password(user.getPassword())
+                .build();
+
+
+
+//        User user = userRepository.findByUsername(username);
+//        if (user != null) {
+//            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles());
+//        } else {
+//            throw new UsernameNotFoundException("User not found with username: " + username);
+//        }
 
 
 
