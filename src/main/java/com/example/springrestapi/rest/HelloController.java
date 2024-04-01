@@ -8,7 +8,7 @@ public class HelloController {
 
     @GetMapping(value = "/hello")
     public String index() {
-        return "hello_yes_or_not";
+        return "hello_yes_or_not_or_yes";
     }
 
 }
