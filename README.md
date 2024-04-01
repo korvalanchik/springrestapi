@@ -58,11 +58,6 @@ Request Body
 
 # User
 ## For all users
-### GET
-View all users 
-#### /api/users
-
-
 ### POST
 User's authentication
 ### /api/users
@@ -80,6 +75,13 @@ Default
 
 
 ### GET
+#### For authenticated users
+View all users
+#### /api/users
+
+
+### GET
+#### For authenticated users
 Finds user by Id
 ### /api/users/{Id}
 
