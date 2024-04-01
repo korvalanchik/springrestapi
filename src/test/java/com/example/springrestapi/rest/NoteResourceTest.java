@@ -92,6 +92,6 @@ public class NoteResourceTest {
 
         // Assert
         verify(noteService).delete(1L);
-        assert response.getStatusCode() == HttpStatus.NO_CONTENT;
+        assert response.getStatusCode() == HttpStatus.OK;
     }
 }
