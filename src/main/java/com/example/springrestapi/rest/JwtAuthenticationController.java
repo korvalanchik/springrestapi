@@ -1,4 +1,4 @@
-package com.example.springrestapi.controller;
+package com.example.springrestapi.rest;
 
 import com.example.springrestapi.model.AuthenticateResponseDto;
 import com.example.springrestapi.model.AuthenticationRequestDto;

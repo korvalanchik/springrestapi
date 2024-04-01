@@ -1,4 +1,4 @@
-package com.example.springrestapi.controller;
+package com.example.springrestapi.rest;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

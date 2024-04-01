@@ -1,4 +1,4 @@
-package com.example.springrestapi.controller;
+package com.example.springrestapi.rest;
 
 import com.example.springrestapi.domain.User;
 import com.example.springrestapi.model.RegistrationRequestDTO;

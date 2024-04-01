@@ -1,9 +1,9 @@
 package com.example.springrestapi.config;
 
 import com.example.springrestapi.service.JwtUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,14 +17,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfiguration {
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter;
 
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+    private final JwtUserDetailsService jwtUserDetailsService;
+
+    public SecurityConfiguration(JwtRequestFilter jwtRequestFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtUserDetailsService jwtUserDetailsService) {
+        this.jwtRequestFilter = jwtRequestFilter;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity httpSecurity)
@@ -43,19 +46,17 @@ public class SecurityConfiguration {
 
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                // dont authenticate this particular request
                 .requestMatchers("/authenticate").permitAll()
                 .requestMatchers("/register").permitAll()
-                // all other requests need to be authenticated
+                .requestMatchers("/users").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/users/{id}").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/users/{id}").authenticated()
                 .anyRequest().authenticated()
                 .and()
-                // make sure we use stateless session; session won't be used to
-                // store user's state.
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
