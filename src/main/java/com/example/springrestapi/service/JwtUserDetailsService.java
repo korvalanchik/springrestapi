@@ -1,47 +1,35 @@
 package com.example.springrestapi.service;
 
-import org.springframework.security.core.userdetails.User;
 import com.example.springrestapi.repos.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    public JwtUserDetailsService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        com.example.springrestapi.domain.User user = userRepository.findByUsername(username);
-        if (user == null) {
+        Optional<com.example.springrestapi.domain.User> userOptional = userRepository.findByUsername(username);
+
+        if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        com.example.springrestapi.domain.User user = userOptional.get();
+
         return User.withUsername(user.getUsername())
                 .password(user.getPassword())
                 .build();
-
-
-
-//        User user = userRepository.findByUsername(username);
-//        if (user != null) {
-//            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles());
-//        } else {
-//            throw new UsernameNotFoundException("User not found with username: " + username);
-//        }
-
-
-
-//        if ("foolishuser".equals(username)) {
-//            return new User("foolishuser", "$2a$10$7pXT3Q6xnONfSdBNlxvqk.j4lc6dGi.TuSxRez7ddia6PyRKBn3TK",
-//                    new ArrayList<>());
-//        } else {
-//            throw new UsernameNotFoundException("User not found with username: " + username);
-//        }
-
     }
+
 }

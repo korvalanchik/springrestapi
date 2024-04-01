@@ -10,9 +10,7 @@ import lombok.Setter;
 @Setter
 public class NoteDTO {
 
-    @NotNull
     private Long id;
-    @NotNull
     private Long userId;
 
     @NotNull
@@ -22,7 +20,5 @@ public class NoteDTO {
     @NotNull
     @Size(max = 255)
     private String content;
-
-    private Long user;
 
 }

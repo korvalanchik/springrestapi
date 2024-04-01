@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 @Transactional
 public class UserService {
@@ -70,13 +69,15 @@ public class UserService {
     }
 
     public ReferencedWarning getReferencedWarning(final Long id) {
+
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final User user = userRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
+
         final Note userNote = noteRepository.findFirstByUser(user);
         if (userNote != null) {
             referencedWarning.setKey("user.note.user.referenced");
-            referencedWarning.addParam(userNote.getUsersId());
+            referencedWarning.addParam(user.getId());
             return referencedWarning;
         }
         return null;

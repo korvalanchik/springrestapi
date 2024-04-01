@@ -59,18 +59,4 @@ public class Note {
         this.lastUpdated = OffsetDateTime.now();
     }
 
-    public Long getUsersId() {
-        return this.user != null ? this.user.getId() : null;
-    }
-
-    public void setUserId(Long userId) {
-        if (userId != null) {
-            if (this.user == null) {
-                this.user = new User();
-            }
-            this.user.setId(userId);
-        } else {
-            this.user = null;
-        }
-    }
 }

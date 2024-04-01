@@ -7,7 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class KeyGenerator {
 
     public static void main(String[] args) {
-        int keyLength = 512; // Key length in bits
+        int keyLength = 512;
         SecretKey secretKey = generateKey(keyLength);
         byte[] encodedKey = secretKey.getEncoded();
         System.out.println("Generated Key (Base64): " + java.util.Base64.getEncoder().encodeToString(encodedKey));
